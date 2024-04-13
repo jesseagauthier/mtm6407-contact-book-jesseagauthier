@@ -80,8 +80,13 @@ export default {
 	},
 	methods: {
 		loadContacts() {
-			this.contacts =
-				JSON.parse(localStorage.getItem('contacts')) || tempContacts
+			const storedContacts = localStorage.getItem('contacts')
+			if (storedContacts) {
+				this.contacts = JSON.parse(storedContacts)
+			} else {
+				this.contacts = tempContacts
+				localStorage.setItem('contacts', JSON.stringify(tempContacts))
+			}
 		},
 		viewContact(id) {
 			this.$router.push({ name: 'ContactDetails', params: { id } })
@@ -89,7 +94,6 @@ export default {
 		deleteContact(id) {
 			this.contacts = this.contacts.filter((contact) => contact.id !== id)
 			localStorage.setItem('contacts', JSON.stringify(this.contacts))
-
 			this.loadContacts()
 		},
 	},
